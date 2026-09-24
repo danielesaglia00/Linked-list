@@ -99,6 +99,7 @@ bool list_remove(list *l, const void *value, list_compare_function cmp_f){
             free(n);
             return true;
         }
+        n = n->next;
     }
 
     return false;

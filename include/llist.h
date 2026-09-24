@@ -12,7 +12,9 @@ typedef bool (*list_compare_function)(const void *a, const void *b);
 
 list* list_create(list_free_function free_f);
 
-bool list_append(list *l, void *value);
+bool list_append_on_head(list *l, void *value);
+
+bool list_append_on_tail(list *l, void *value);
 
 bool list_remove(list *l, const void *value, list_compare_function cmp_f);
 
