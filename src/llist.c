@@ -117,8 +117,13 @@ void* list_get_head(list *l){
             head->next->prev = NULL;
             l->head = head->next;
         }
+        else{
+            l->head = NULL;
+            l->tail = NULL;
+        }
         value = head->value;
         free(head);
+        l->size--;
         return value;
     }
 
@@ -137,8 +142,13 @@ void* list_get_tail(list *l){
             tail->prev->next = NULL;
             l->tail = tail->prev;
         }
+        else{
+            l->head = NULL;
+            l->tail = NULL;
+        }
         value = tail->value;
         free(tail);
+        l->size--;
         return value;
     }
 
@@ -152,8 +162,8 @@ void list_destroy(list *l){
     while(n != NULL){
         l->free_f(n->value);
         node *next = n->next;
-        n = next;
         free(n);
+        n = next;
     }
 
     free(l);
