@@ -18,7 +18,7 @@ struct list{
     list_free_function free_f;
 };
 
-list* create_list(list_free_function free_f){
+list* list_create(list_free_function free_f){
     list *l = malloc(sizeof(list));
 
     if(l == NULL) 
@@ -32,8 +32,29 @@ list* create_list(list_free_function free_f){
     return l;
 }
 
-bool append_list(list *l, void *value){
+bool list_append_on_head(list *l, void *value){
     node *n = malloc(sizeof(node));
+
+    if(n == NULL)
+        return false;
+    
+    n->value = value;
+    n->next = l->head;
+    n->prev = NULL;
+
+    if(l->size == 0)
+        l->tail = n;
+    else
+        l->head->prev = n;
+
+    l->head = n;
+    l->size++;
+
+    return true;
+}
+
+bool list_append_on_tail(list *l, void *value){
+  node *n = malloc(sizeof(node));
 
     if(n == NULL)
         return false;
@@ -53,8 +74,7 @@ bool append_list(list *l, void *value){
     return true;
 }
 
-
-size_t size(const list *l){
+size_t list_size(const list *l){
     if(l == NULL)
         return 0;
     else
@@ -76,12 +96,54 @@ bool list_remove(list *l, const void *value, list_compare_function cmp_f){
             else
                 l->head = n->next;
             l->size--;
+            free(n);
             return true;
         }
     }
 
     return false;
 }
+
+void* list_get_head(list *l){  
+    if(l == NULL)
+        return NULL;  
+
+    node *head = l->head;
+    void *value = NULL;
+
+    if(head != NULL){
+        if(head->next != NULL){
+            head->next->prev = NULL;
+            l->head = head->next;
+        }
+        value = head->value;
+        free(head);
+        return value;
+    }
+
+    return value;
+}
+
+void* list_get_tail(list *l){
+    if(l == NULL)
+        return NULL;
+
+    node *tail = l->tail;
+    void *value = NULL;
+
+    if(tail != NULL){
+        if(tail->prev != NULL){
+            tail->prev->next = NULL;
+            l->tail = tail->prev;
+        }
+        value = tail->value;
+        free(tail);
+        return value;
+    }
+
+    return value;
+}
+
 
 void list_destroy(list *l){
     node *n = l->head;
